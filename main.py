@@ -2,6 +2,7 @@
 from flask import Flask
 from market import get_data
 from strategy import analyse
+from result_checker import check_results
 import requests
 import os
 import schedule
@@ -16,6 +17,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 dernier_signal = {}
 
 def envoyer_signaux():
+    check_results()
     actifs = ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"]
 
     for actif in actifs:
