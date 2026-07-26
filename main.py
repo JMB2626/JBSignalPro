@@ -16,22 +16,21 @@ def home():
     for actif in actifs:
         try:
             timeframes = ["1min", "5min", "15min"]
+            resultats = []
 
-resultats = []
+            for tf in timeframes:
+                df = get_data(actif, tf)
+                signal, confiance = analyse(df)
+                resultats.append((signal, confiance))
 
-for tf in timeframes:
-    df = get_data(actif, tf)
-    signal, confiance = analyse(df)
-    resultats.append((signal, confiance))
+            if all(r[0] == "🟢 ACHAT" for r in resultats):
+                signal = "🟢 ACHAT"
+            elif all(r[0] == "🔴 VENTE" for r in resultats):
+                signal = "🔴 VENTE"
+            else:
+                signal = "⏸ ATTENTE"
 
-if all(r[0] == "🟢 ACHAT" for r in resultats):
-    signal = "🟢 ACHAT"
-elif all(r[0] == "🔴 VENTE" for r in resultats):
-    signal = "🔴 VENTE"
-else:
-    signal = "⏸ ATTENTE"
-
-confiance = sum(r[1] for r in resultats) // 3
+            confiance = sum(r[1] for r in resultats) // len(resultats)
 
             requests.post(
                 f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
@@ -40,6 +39,7 @@ confiance = sum(r[1] for r in resultats) // 3
                     "text": f"📊 {actif}\nSignal : {signal}\nConfiance : {confiance}%"
                 }
             )
+
         except Exception as e:
             print(e)
 
