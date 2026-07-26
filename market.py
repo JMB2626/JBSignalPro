@@ -1,18 +1,14 @@
+
 from twelvedata import TDClient
 import os
 
-def get_data(symbol):
-    api_key = os.getenv("TWELVEDATA_API_KEY")
-
-    if not api_key:
-        raise Exception("TWELVEDATA_API_KEY introuvable")
-
-    td = TDClient(apikey=api_key)
+def get_data(symbol, interval):
+    td = TDClient(apikey=os.getenv("TWELVEDATA_API_KEY"))
 
     ts = td.time_series(
         symbol=symbol,
-        interval="5min",
-        outputsize=100,
+        interval=interval,
+        outputsize=100
     )
 
     return ts.as_pandas()
