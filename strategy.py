@@ -20,21 +20,24 @@ def analyse(df):
     ]
 
     prediction = predict(features)
-    save_signal(
+save_signal(
     last["EMA20"],
     last["EMA50"],
     last["EMA200"],
-    last["RSI"]
-    )
-
+    last["RSI"],
+    "BUY",
+    last["close"]
+)
     if prediction == 1:
         return "🟢 ACHAT", 90
         save_signal(
     last["EMA20"],
     last["EMA50"],
     last["EMA200"],
-    last["RSI"]
-        )
+    last["RSI"],
+    "SELL",
+    last["close"]
+)
 
     if prediction == 0:
         return "🔴 VENTE", 90
