@@ -5,3 +5,5 @@ numpy
 ta
 twelvedata
 schedule
+scikit-learn
+joblib
