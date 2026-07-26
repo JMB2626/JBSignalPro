@@ -1,3 +1,4 @@
+
 from ta.trend import EMAIndicator
 from ta.momentum import RSIIndicator
 from ai import predict
@@ -20,26 +21,27 @@ def analyse(df):
     ]
 
     prediction = predict(features)
-save_signal(
-    last["EMA20"],
-    last["EMA50"],
-    last["EMA200"],
-    last["RSI"],
-    "BUY",
-    last["close"]
-)
+
     if prediction == 1:
-        return "🟢 ACHAT", 90
         save_signal(
-    last["EMA20"],
-    last["EMA50"],
-    last["EMA200"],
-    last["RSI"],
-    "SELL",
-    last["close"]
-)
+            last["EMA20"],
+            last["EMA50"],
+            last["EMA200"],
+            last["RSI"],
+            "BUY",
+            last["close"]
+        )
+        return "🟢 ACHAT", 90
 
     if prediction == 0:
+        save_signal(
+            last["EMA20"],
+            last["EMA50"],
+            last["EMA200"],
+            last["RSI"],
+            "SELL",
+            last["close"]
+        )
         return "🔴 VENTE", 90
 
     return "⏸ ATTENTE", 50
