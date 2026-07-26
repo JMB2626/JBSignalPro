@@ -1,6 +1,8 @@
-import os
-import requests
 from flask import Flask
+from market import get_data
+from strategy import analyse
+import requests
+import os
 
 app = Flask(__name__)
 
@@ -9,13 +11,21 @@ CHAT_ID = os.getenv("CHAT_ID")
 
 @app.route("/")
 def home():
-    url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    requests.post(url, data={
-        "chat_id": CHAT_ID,
-        "text": "✅ JBSignalPro est maintenant connecté avec succès !"
-    })
-    return "Message envoyé."
+    actifs = ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"]
 
-if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
-    app.run(host="0.0.0.0", port=port)
+    for actif in actifs:
+        try:
+            df = get_data(actif)
+            signal = analyse(df)
+
+            requests.post(
+                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+                data={
+                    "chat_id": CHAT_ID,
+                    "text": f"📊 {actif}\nSignal : {signal}"
+                }
+            )
+        except Exception as e:
+            print(e)
+
+    return "Analyse terminée."
