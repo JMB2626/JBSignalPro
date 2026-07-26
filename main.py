@@ -16,13 +16,13 @@ def home():
     for actif in actifs:
         try:
             df = get_data(actif)
-            signal = analyse(df)
+            signal, confiance = analyse(df)
 
             requests.post(
                 f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
                 data={
                     "chat_id": CHAT_ID,
-                    "text": f"📊 {actif}\nSignal : {signal}"
+                    "text": f"📊 {actif}\nSignal : {signal}\nConfiance : {confiance}%"
                 }
             )
         except Exception as e:
