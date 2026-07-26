@@ -45,6 +45,8 @@ def envoyer_signaux():
 
     dernier_signal[actif] = signal
 
+    dernier_signal[actif] = signal
+
         except Exception as e:
             print(e)
 
