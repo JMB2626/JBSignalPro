@@ -1,13 +1,19 @@
 import csv
 import os
+import time
 
 FILE = "history.csv"
 
-def save_signal(ema20, ema50, ema200, rsi, signal, prix_entree):
-    if not os.path.exists(FILE):
-        with open(FILE, "w", newline="") as f:
-            writer = csv.writer(f)
+def save_signal(ema20, ema50, ema200, rsi, signal, entry, result=-1):
+
+    existe = os.path.exists(FILE)
+
+    with open(FILE, "a", newline="") as f:
+        writer = csv.writer(f)
+
+        if not existe:
             writer.writerow([
+                "time",
                 "ema20",
                 "ema50",
                 "ema200",
@@ -17,14 +23,13 @@ def save_signal(ema20, ema50, ema200, rsi, signal, prix_entree):
                 "result"
             ])
 
-    with open(FILE, "a", newline="") as f:
-        writer = csv.writer(f)
         writer.writerow([
+            int(time.time()),
             ema20,
             ema50,
             ema200,
             rsi,
             signal,
-            prix_entree,
-            -1
+            entry,
+            result
         ])
