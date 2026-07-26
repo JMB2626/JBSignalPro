@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
+dernier_signal = {}
 
 def envoyer_signaux():
     actifs = ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"]
@@ -33,13 +34,16 @@ def envoyer_signaux():
 
             confiance = sum(r[1] for r in resultats) // len(resultats)
 
-            requests.post(
-                f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
-                data={
-                    "chat_id": CHAT_ID,
-                    "text": f"📊 {actif}\nSignal : {signal}\nConfiance : {confiance}%"
-                }
-            )
+            if dernier_signal.get(actif) != signal:
+    requests.post(
+        f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
+        data={
+            "chat_id": CHAT_ID,
+            "text": f"📊 {actif}\nSignal : {signal}\nConfiance : {confiance}%"
+        }
+    )
+
+    dernier_signal[actif] = signal
 
         except Exception as e:
             print(e)
