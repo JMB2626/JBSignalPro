@@ -34,7 +34,7 @@ def envoyer_signaux():
             else:
                 continue
 
-            confiance = sum(r[1] for r in resultats) // len(resultats)
+            confiance = min(r[1] for r in resultats)
 
             if dernier_signal.get(actif) != signal:
                 requests.post(
