@@ -8,10 +8,21 @@ def analyse(df):
 
     last = df.iloc[-1]
 
-    if last["EMA20"] > last["EMA50"] and last["RSI"] < 70:
-        return "🟢 ACHAT"
+    score = 0
 
-    if last["EMA20"] < last["EMA50"] and last["RSI"] > 30:
-        return "🔴 VENTE"
+    if last["EMA20"] > last["EMA50"]:
+        score += 50
 
-    return "⏸ ATTENTE"
+    if 45 <= last["RSI"] <= 65:
+        score += 50
+
+    confiance = score
+
+    if score == 100:
+        signal = "🟢 ACHAT"
+    elif score == 50:
+        signal = "⏸ ATTENTE"
+    else:
+        signal = "🔴 VENTE"
+
+    return signal, confiance
