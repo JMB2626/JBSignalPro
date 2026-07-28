@@ -31,10 +31,13 @@ def envoyer_signaux():
                 print(f"{actif} {tf} -> {signal} ({confiance}%)")
                 resultats.append((signal, confiance))
 
-            if all(r[0] == "🟢 ACHAT" for r in resultats):
-                signal = "🟢 ACHAT"
-            elif all(r[0] == "🔴 VENTE" for r in resultats):
-                signal = "🔴 VENTE"
+            achat = sum(1 for r in resultats if r[0] == "🟢 ACHAT")
+            vente = sum(1 for r in resultats if r[0] == "🔴 VENTE")
+
+            if achat >= 2:
+               signal = "🟢 ACHAT"
+            elif vente >= 2:
+               signal = "🔴 VENTE"
             else:
                 continue
 
