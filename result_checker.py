@@ -1,8 +1,12 @@
+import os
 import pandas as pd
 from market import get_data
 from trainer import train
 
 def check_results():
+
+    if not os.path.exists("history.csv"):
+        return
 
     df = pd.read_csv("history.csv")
 
