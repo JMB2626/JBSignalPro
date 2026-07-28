@@ -1,40 +1,96 @@
 from history import save_signal
 
+
 def analyse(df):
 
-    if len(df) < 5:
+    if len(df) < 20:
         return "⏸ ATTENTE", 50
 
-    c1 = df.iloc[-5]
-    c2 = df.iloc[-4]
-    c3 = df.iloc[-3]
-    c4 = df.iloc[-2]
-    c5 = df.iloc[-1]
+    # Dernières bougies
+    current = df.iloc[-1]
+    previous = df.iloc[-2]
 
-    # Swing High
-    if c3["high"] > c2["high"] and c3["high"] > c4["high"]:
+    # Recherche du dernier Swing High et Swing Low
+    swing_high = df["high"].iloc[-10:-2].max()
+    swing_low = df["low"].iloc[-10:-2].min()
 
-        if c5["close"] > c3["high"]:
+    score_buy = 0
+    score_sell = 0
 
-            save_signal(
-                0,0,0,0,
-                "BUY",
-                c5["close"]
-            )
+    # =========================
+    # BOS (Break Of Structure)
+    # =========================
 
-            return "🟢 ACHAT", 90
+    if current["close"] > swing_high:
+        score_buy += 40
 
-    # Swing Low
-    if c3["low"] < c2["low"] and c3["low"] < c4["low"]:
+    if current["close"] < swing_low:
+        score_sell += 40
 
-        if c5["close"] < c3["low"]:
 
-            save_signal(
-                0,0,0,0,
-                "SELL",
-                c5["close"]
-            )
+    # =========================
+    # CHOCH (changement structure)
+    # =========================
 
-            return "🔴 VENTE", 90
+    if previous["close"] < previous["open"] and current["close"] > current["open"]:
+        score_buy += 20
 
-    return "⏸ ATTENTE", 50
+    if previous["close"] > previous["open"] and current["close"] < current["open"]:
+        score_sell += 20
+
+
+    # =========================
+    # Retest du niveau cassé
+    # =========================
+
+    if current["low"] <= swing_high and current["close"] > swing_high:
+        score_buy += 20
+
+    if current["high"] >= swing_low and current["close"] < swing_low:
+        score_sell += 20
+
+
+    # =========================
+    # Volume confirmation
+    # =========================
+
+    if "volume" in df.columns:
+
+        volume_moyen = df["volume"].iloc[-10:].mean()
+
+        if current["volume"] > volume_moyen:
+            if score_buy > score_sell:
+                score_buy += 20
+            elif score_sell > score_buy:
+                score_sell += 20
+
+
+    # =========================
+    # Décision finale
+    # =========================
+
+    if score_buy >= 70:
+        save_signal(
+            0,
+            0,
+            0,
+            0,
+            "BUY",
+            current["close"]
+        )
+        return "🟢 ACHAT", score_buy
+
+
+    if score_sell >= 70:
+        save_signal(
+            0,
+            0,
+            0,
+            0,
+            "SELL",
+            current["close"]
+        )
+        return "🔴 VENTE", score_sell
+
+
+    return "⏸ ATTENTE", max(score_buy, score_sell)
