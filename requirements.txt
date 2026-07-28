@@ -7,3 +7,4 @@ twelvedata
 schedule
 scikit-learn
 joblib
+finnhub-python
