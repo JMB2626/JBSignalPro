@@ -47,7 +47,7 @@ def envoyer_signaux():
         except Exception as e:
             print(f"Erreur sur {actif} : {e}")
 
-schedule.every(1).minutes.do(envoyer_signaux)
+schedule.every(5).minutes.do(envoyer_signaux)
 
 def scheduler():
     while True:
