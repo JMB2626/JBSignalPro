@@ -8,7 +8,7 @@ def get_data(symbol, interval):
     ts = td.time_series(
         symbol=symbol,
         interval=interval,
-        outputsize=100
+        outputsize=30
     )
 
     return ts.as_pandas()
