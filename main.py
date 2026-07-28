@@ -17,6 +17,7 @@ CHAT_ID = os.getenv("CHAT_ID")
 dernier_signal = {}
 
 def envoyer_signaux():
+    print("=== Début analyse ===")
     check_results()
     actifs = ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"]
 
@@ -39,6 +40,7 @@ def envoyer_signaux():
             confiance = min(r[1] for r in resultats)
 
             if dernier_signal.get(actif) != signal:
+                print(actif, signal, confiance)
                 requests.post(
                     f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
                     data={
