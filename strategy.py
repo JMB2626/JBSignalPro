@@ -1,7 +1,5 @@
-
 from ta.trend import EMAIndicator
 from ta.momentum import RSIIndicator
-from ai import predict
 from history import save_signal
 
 def analyse(df):
@@ -13,16 +11,7 @@ def analyse(df):
 
     last = df.iloc[-1]
 
-    features = [
-        last["EMA20"],
-        last["EMA50"],
-        last["EMA200"],
-        last["RSI"]
-    ]
-
-    prediction = predict(features)
-
-    if prediction == 1:
+    if last["EMA20"] > last["EMA50"] and last["RSI"] > 55:
         save_signal(
             last["EMA20"],
             last["EMA50"],
@@ -31,9 +20,9 @@ def analyse(df):
             "BUY",
             last["close"]
         )
-        return "🟢 ACHAT", 90
+        return "🟢 ACHAT", 80
 
-    if prediction == 0:
+    if last["EMA20"] < last["EMA50"] and last["RSI"] < 45:
         save_signal(
             last["EMA20"],
             last["EMA50"],
@@ -42,6 +31,6 @@ def analyse(df):
             "SELL",
             last["close"]
         )
-        return "🔴 VENTE", 90
+        return "🔴 VENTE", 80
 
     return "⏸ ATTENTE", 50
