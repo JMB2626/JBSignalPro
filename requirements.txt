@@ -8,3 +8,4 @@ schedule
 scikit-learn
 joblib
 finnhub-python
+alpha_vantage
