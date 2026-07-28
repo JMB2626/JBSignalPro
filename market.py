@@ -1,14 +1,30 @@
-
-from twelvedata import TDClient
 import os
+import requests
+import pandas as pd
 
-def get_data(symbol, interval):
-    td = TDClient(apikey=os.getenv("TWELVEDATA_API_KEY"))
+API_KEY = os.getenv("FINNHUB_API_KEY")
 
-    ts = td.time_series(
-        symbol=symbol,
-        interval=interval,
-        outputsize=30
+def get_data():
+
+    url = (
+        f"https://finnhub.io/api/v1/forex/candle"
+        f"?symbol=OANDA:XAU_USD"
+        f"&resolution=5"
+        f"&count=30"
+        f"&token={API_KEY}"
     )
 
-    return ts.as_pandas()
+    data = requests.get(url).json()
+
+    if data.get("s") != "ok":
+        raise Exception(data)
+
+    df = pd.DataFrame({
+        "open": data["o"],
+        "high": data["h"],
+        "low": data["l"],
+        "close": data["c"],
+        "volume": data["v"]
+    })
+
+    return df
