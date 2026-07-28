@@ -1,36 +1,32 @@
-from ta.trend import EMAIndicator
-from ta.momentum import RSIIndicator
 from history import save_signal
 
 def analyse(df):
 
-    df["EMA20"] = EMAIndicator(df["close"], window=20).ema_indicator()
-    df["EMA50"] = EMAIndicator(df["close"], window=50).ema_indicator()
-    df["EMA200"] = EMAIndicator(df["close"], window=200).ema_indicator()
-    df["RSI"] = RSIIndicator(df["close"], window=14).rsi()
-
     last = df.iloc[-1]
+    prev = df.iloc[-2]
 
-    if last["EMA20"] > last["EMA50"] and last["RSI"] > 55:
+    # Cassure haussière (Break of Structure)
+    if last["close"] > prev["high"]:
         save_signal(
-            last["EMA20"],
-            last["EMA50"],
-            last["EMA200"],
-            last["RSI"],
+            0,
+            0,
+            0,
+            0,
             "BUY",
             last["close"]
         )
-        return "🟢 ACHAT", 80
+        return "🟢 ACHAT", 90
 
-    if last["EMA20"] < last["EMA50"] and last["RSI"] < 45:
+    # Cassure baissière
+    if last["close"] < prev["low"]:
         save_signal(
-            last["EMA20"],
-            last["EMA50"],
-            last["EMA200"],
-            last["RSI"],
+            0,
+            0,
+            0,
+            0,
             "SELL",
             last["close"]
         )
-        return "🔴 VENTE", 80
+        return "🔴 VENTE", 90
 
     return "⏸ ATTENTE", 50
