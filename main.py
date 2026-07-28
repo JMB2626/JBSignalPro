@@ -28,17 +28,8 @@ def envoyer_signaux():
             df = get_data(actif, "5min")
             signal, confiance = analyse(df)
 
-            achat = sum(1 for r in resultats if r[0] == "🟢 ACHAT")
-            vente = sum(1 for r in resultats if r[0] == "🔴 VENTE")
-
-            if achat >= 2:
-               signal = "🟢 ACHAT"
-            elif vente >= 2:
-               signal = "🔴 VENTE"
-            else:
-                continue
-
-            confiance = min(r[1] for r in resultats)
+            if signal == "⏸ ATTENTE":
+               continue
 
             if dernier_signal.get(actif) != signal:
                 print(actif, signal, confiance)
