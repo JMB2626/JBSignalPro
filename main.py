@@ -19,7 +19,7 @@ def envoyer_signaux():
     print("=== Début analyse ===")
     check_results()
 
-    actifs = ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"]
+    actifs = ["EUR/USD", "XAU/USD"]
 
     for actif in actifs:
         try:
