@@ -1,4 +1,3 @@
-
 from flask import Flask
 from market import get_data
 from strategy import analyse
@@ -19,6 +18,7 @@ dernier_signal = {}
 def envoyer_signaux():
     print("=== Début analyse ===")
     check_results()
+
     actifs = ["EUR/USD", "GBP/USD", "USD/JPY", "XAU/USD"]
 
     for actif in actifs:
@@ -41,6 +41,7 @@ def envoyer_signaux():
 
             if dernier_signal.get(actif) != signal:
                 print(actif, signal, confiance)
+
                 requests.post(
                     f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage",
                     data={
@@ -52,7 +53,7 @@ def envoyer_signaux():
                 dernier_signal[actif] = signal
 
         except Exception as e:
-            print(e)
+            print(f"Erreur sur {actif} : {e}")
 
 schedule.every(1).minutes.do(envoyer_signaux)
 
@@ -61,12 +62,15 @@ def scheduler():
         schedule.run_pending()
         time.sleep(1)
 
-threading.Thread(target=scheduler, daemon=True).start()
-
 @app.route("/")
 def home():
     return "JBSignalPro est actif."
 
 if __name__ == "__main__":
+    threading.Thread(target=scheduler, daemon=True).start()
+
+    # Analyse immédiate au démarrage
+    envoyer_signaux()
+
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
