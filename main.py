@@ -25,7 +25,7 @@ def envoyer_signaux():
         try:
             resultats = []
 
-            df = get_data(actif, "5min")
+            df = get_data()
             signal, confiance = analyse(df)
 
             if signal == "⏸ ATTENTE":
