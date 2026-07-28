@@ -25,11 +25,8 @@ def envoyer_signaux():
         try:
             resultats = []
 
-            for tf in ["1min", "5min", "15min"]:
-                df = get_data(actif, tf)
-                signal, confiance = analyse(df)
-                print(f"{actif} {tf} -> {signal} ({confiance}%)")
-                resultats.append((signal, confiance))
+            df = get_data(actif, "5min")
+            signal, confiance = analyse(df)
 
             achat = sum(1 for r in resultats if r[0] == "🟢 ACHAT")
             vente = sum(1 for r in resultats if r[0] == "🔴 VENTE")
