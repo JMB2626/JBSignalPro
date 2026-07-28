@@ -28,6 +28,7 @@ def envoyer_signaux():
             for tf in ["1min", "5min", "15min"]:
                 df = get_data(actif, tf)
                 signal, confiance = analyse(df)
+                print(f"{actif} {tf} -> {signal} ({confiance}%)")
                 resultats.append((signal, confiance))
 
             if all(r[0] == "🟢 ACHAT" for r in resultats):
