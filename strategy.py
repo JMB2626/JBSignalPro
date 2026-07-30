@@ -63,8 +63,9 @@ def analyse(df):
                 score_buy += 20
             elif score_sell > score_buy:
                 score_sell += 20
-                trend_up = df["close"].iloc[-20] < df["close"].iloc[-1]
-                trend_down = df["close"].iloc[-20] > df["close"].iloc[-1]
+
+trend_up = df["close"].iloc[-20] < df["close"].iloc[-1]
+trend_down = df["close"].iloc[-20] > df["close"].iloc[-1]
 
 
     # =========================
