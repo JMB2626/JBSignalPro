@@ -63,13 +63,15 @@ def analyse(df):
                 score_buy += 20
             elif score_sell > score_buy:
                 score_sell += 20
+                trend_up = df["close"].iloc[-20] < df["close"].iloc[-1]
+                trend_down = df["close"].iloc[-20] > df["close"].iloc[-1]
 
 
     # =========================
     # Décision finale
     # =========================
 
-    if score_buy >= 70:
+    if trend_up and score_buy >= 70:
         save_signal(
             0,
             0,
@@ -81,7 +83,7 @@ def analyse(df):
         return "🟢 ACHAT", score_buy
 
 
-    if score_sell >= 70:
+    if trend_down and score_sell >= 70:
         save_signal(
             0,
             0,
