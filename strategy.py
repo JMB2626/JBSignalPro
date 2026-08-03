@@ -3,6 +3,7 @@ from structure import trend
 from swings import last_swing_high, last_swing_low
 from bos import bos
 from choch import choch
+from retest import retest
 
 def analyse(df):
 
@@ -23,11 +24,12 @@ def analyse(df):
     # BOS
     # =========================
     structure = bos(df, swing_high, swing_low)
+    valid_retest = retest(df, swing_high, swing_low, structure)
     change = choch(df)
-    if structure == "BUY":
+    if structure == "BUY" and valid_retest:
        score_buy += 40
 
-    if structure == "SELL":
+    if structure == "SELL" and valid_retest:
        score_sell += 40
     
 
