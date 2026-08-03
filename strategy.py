@@ -67,14 +67,13 @@ def analyse(df):
     # Filtre de tendance
     # =========================
 
-    trend_up = df["close"].iloc[-20] < df["close"].iloc[-1]
-    trend_down = df["close"].iloc[-20] > df["close"].iloc[-1]
+    
 
     # =========================
     # Décision finale
     # =========================
 
-    if trend_up and score_buy >= 70:
+    if direction == "UP" and score_buy >= 70:
 
         save_signal(
             0,
@@ -87,7 +86,7 @@ def analyse(df):
 
         return "🟢 ACHAT", score_buy
 
-    if trend_down and score_sell >= 70:
+    if direction == "DOWN" and score_sell >= 70:
 
         save_signal(
             0,
