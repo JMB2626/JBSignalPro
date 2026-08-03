@@ -5,6 +5,7 @@ from bos import bos
 from choch import choch
 from retest import retest
 from orderblock import order_block
+from fvg import fair_value_gap
 
 def analyse(df):
 
@@ -27,11 +28,12 @@ def analyse(df):
     structure = bos(df, swing_high, swing_low)
     valid_retest = retest(df, swing_high, swing_low, structure)
     valid_ob = order_block(df, structure)
+    valid_fvg = fair_value_gap(df, structure)
     change = choch(df)
-    if structure == "BUY" and valid_retest and valid_ob:
+    if structure == "BUY" and valid_retest and valid_ob and valid_fvg:
        score_buy += 40
 
-    if structure == "SELL" and valid_retest and valid_ob:
+    if structure == "SELL" and valid_retest and valid_ob and valid_fvg:
        score_sell += 40
     
 
