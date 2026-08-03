@@ -10,6 +10,7 @@ def analyse(df):
     current = df.iloc[-1]
     previous = df.iloc[-2]
 
+    direction = trend(df)
     swing_high = df["high"].iloc[-10:-2].max()
     swing_low = df["low"].iloc[-10:-2].min()
 
