@@ -1,4 +1,5 @@
 from history import save_signal
+from structure import trend
 
 
 def analyse(df):
