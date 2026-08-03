@@ -1,7 +1,7 @@
 from history import save_signal
 from structure import trend
 from swings import last_swing_high, last_swing_low
-
+from bos import bos
 
 def analyse(df):
 
@@ -21,12 +21,14 @@ def analyse(df):
     # =========================
     # BOS
     # =========================
+structure = bos(df, swing_high, swing_low)
 
-    if current["close"] > swing_high:
-        score_buy += 40
+if structure == "BUY":
+    score_buy += 40
 
-    if current["close"] < swing_low:
-        score_sell += 40
+if structure == "SELL":
+    score_sell += 40
+    
 
     # =========================
     # CHOCH
