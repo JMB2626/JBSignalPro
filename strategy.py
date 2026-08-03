@@ -1,5 +1,6 @@
 from history import save_signal
 from structure import trend
+from swings import last_swing_high, last_swing_low
 
 
 def analyse(df):
@@ -11,8 +12,8 @@ def analyse(df):
     previous = df.iloc[-2]
 
     direction = trend(df)
-    swing_high = df["high"].iloc[-10:-2].max()
-    swing_low = df["low"].iloc[-10:-2].min()
+    swing_high = last_swing_high(df)
+    swing_low = last_swing_low(df)
 
     score_buy = 0
     score_sell = 0
