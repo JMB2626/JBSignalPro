@@ -1,18 +1,29 @@
 def trend(df):
 
-    highs = df["high"].tail(20).tolist()
-    lows = df["low"].tail(20).tolist()
+    highs = df["high"].tail(10).tolist()
+    lows = df["low"].tail(10).tolist()
 
-    hh = highs[-1] > highs[-2]
-    hl = lows[-1] > lows[-2]
+    hh = 0
+    hl = 0
+    lh = 0
+    ll = 0
 
-    lh = highs[-1] < highs[-2]
-    ll = lows[-1] < lows[-2]
+    for i in range(1, len(highs)):
 
-    if hh and hl:
+        if highs[i] > highs[i - 1]:
+            hh += 1
+        else:
+            lh += 1
+
+        if lows[i] > lows[i - 1]:
+            hl += 1
+        else:
+            ll += 1
+
+    if hh >= 6 and hl >= 6:
         return "UP"
 
-    if lh and ll:
+    if lh >= 6 and ll >= 6:
         return "DOWN"
 
     return "RANGE"
