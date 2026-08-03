@@ -2,6 +2,7 @@ from history import save_signal
 from structure import trend
 from swings import last_swing_high, last_swing_low
 from bos import bos
+from choch import choch
 
 def analyse(df):
 
@@ -22,9 +23,9 @@ def analyse(df):
     # BOS
     # =========================
     structure = bos(df, swing_high, swing_low)
-
+    change = choch(df)
     if structure == "BUY":
-        score_buy += 40
+       score_buy += 40
 
     if structure == "SELL":
        score_sell += 40
@@ -33,12 +34,11 @@ def analyse(df):
     # =========================
     # CHOCH
     # =========================
+    if change == "BUY":
+       score_buy += 20
 
-    if previous["close"] < previous["open"] and current["close"] > current["open"]:
-        score_buy += 20
-
-    if previous["close"] > previous["open"] and current["close"] < current["open"]:
-        score_sell += 20
+    if change == "SELL":
+       score_sell += 20
 
     # =========================
     # RETEST
