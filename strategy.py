@@ -21,13 +21,13 @@ def analyse(df):
     # =========================
     # BOS
     # =========================
-structure = bos(df, swing_high, swing_low)
+    structure = bos(df, swing_high, swing_low)
 
-if structure == "BUY":
-    score_buy += 40
+    if structure == "BUY":
+        score_buy += 40
 
-if structure == "SELL":
-    score_sell += 40
+    if structure == "SELL":
+       score_sell += 40
     
 
     # =========================
