@@ -4,6 +4,7 @@ from swings import last_swing_high, last_swing_low
 from bos import bos
 from choch import choch
 from retest import retest
+from orderblock import order_block
 
 def analyse(df):
 
@@ -25,11 +26,12 @@ def analyse(df):
     # =========================
     structure = bos(df, swing_high, swing_low)
     valid_retest = retest(df, swing_high, swing_low, structure)
+    valid_ob = order_block(df, structure)
     change = choch(df)
-    if structure == "BUY" and valid_retest:
+    if structure == "BUY" and valid_retest and valid_ob:
        score_buy += 40
 
-    if structure == "SELL" and valid_retest:
+    if structure == "SELL" and valid_retest and valid_ob:
        score_sell += 40
     
 
