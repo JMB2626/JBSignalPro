@@ -30,10 +30,10 @@ def analyse(df):
     valid_ob = order_block(df, structure)
     valid_fvg = fair_value_gap(df, structure)
     change = choch(df)
-    if structure == "BUY" and valid_retest and valid_ob and valid_fvg:
+    if structure == "BUY" and valid_retest:
        score_buy += 40
 
-    if structure == "SELL" and valid_retest and valid_ob and valid_fvg:
+    if structure == "SELL" and valid_retest:
        score_sell += 40
     
 
