@@ -1,5 +1,5 @@
 from flask import Flask
-from market import get_data
+from market import get_h4, get_m1
 from strategy import analyse
 from result_checker import check_results
 import requests
