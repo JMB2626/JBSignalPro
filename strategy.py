@@ -75,7 +75,12 @@ def analyse(df):
     # =========================
     # Filtre de tendance
     # =========================
-
+print("Direction :", direction)
+print("BOS :", structure)
+print("CHOCH :", change)
+print("Retest :", valid_retest)
+print("Score BUY :", score_buy)
+print("Score SELL :", score_sell)
     
 
     # =========================
