@@ -27,6 +27,7 @@ def envoyer_signaux():
 
             df = get_data()
             signal, confiance = analyse(df)
+            print(signal, confiance)
             print(f"Signal : {signal} | Confiance : {confiance}%")
 
             if signal == "⏸ ATTENTE":
