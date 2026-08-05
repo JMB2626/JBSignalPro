@@ -1,94 +1,29 @@
+from support_resistance import levels
+from engulfing import engulfing
 from history import save_signal
-from structure import trend
-from swings import last_swing_high, last_swing_low
-from bos import bos
-from choch import choch
-from retest import retest
-from orderblock import order_block
-from fvg import fair_value_gap
 
 def analyse(df):
 
-    if len(df) < 20:
+    if len(df) < 25:
         return "⏸ ATTENTE", 50
 
+    support, resistance = levels(df)
+
     current = df.iloc[-1]
-    previous = df.iloc[-2]
 
-    direction = trend(df)
-    swing_high = last_swing_high(df)
-    swing_low = last_swing_low(df)
+    pattern = engulfing(df)
 
-    score_buy = 0
-    score_sell = 0
-
-    # =========================
-    # BOS
-    # =========================
-    structure = bos(df, swing_high, swing_low)
-    valid_retest = retest(df, swing_high, swing_low, structure)
-    valid_ob = order_block(df, structure)
-    valid_fvg = fair_value_gap(df, structure)
-    change = choch(df)
-    if structure == "BUY" and valid_retest:
-       score_buy += 40
-
-    if structure == "SELL" and valid_retest:
-       score_sell += 40
-    
-
-    # =========================
-    # CHOCH
-    # =========================
-    if change == "BUY":
-       score_buy += 20
-
-    if change == "SELL":
-       score_sell += 20
-
-    # =========================
-    # RETEST
-    # =========================
-
-    if current["low"] <= swing_high and current["close"] > swing_high:
-        score_buy += 20
-
-    if current["high"] >= swing_low and current["close"] < swing_low:
-        score_sell += 20
-
-    # =========================
-    # Confirmation par le volume
-    # =========================
+    volume_ok = True
 
     if "volume" in df.columns:
+        volume_ok = current["volume"] > df["volume"].tail(10).mean()
 
-        volume_moyen = df["volume"].iloc[-10:].mean()
-
-        if current["volume"] > volume_moyen:
-
-            if score_buy > score_sell:
-                score_buy += 20
-
-            elif score_sell > score_buy:
-                score_sell += 20
-
-    # =========================
-    # Filtre de tendance
-    # =========================
-     
-    print("Direction :", direction)
-    print("BOS :", structure)
-    print("CHOCH :", change)
-    print("Retest :", valid_retest)
-    print("Score BUY :", score_buy)
-    print("Score SELL :", score_sell)
-    
-
-    # =========================
-    # Décision finale
-    # =========================
-
-    if direction == "UP" and score_buy >= 70:
+    # ACHAT
+    if (
+        current["close"] > resistance
+        and pattern == "BUY"
+        and volume_ok
+    ):
 
         save_signal(
             0,
@@ -99,9 +34,14 @@ def analyse(df):
             current["close"]
         )
 
-        return "🟢 ACHAT", score_buy
+        return "🟢 ACHAT", 85
 
-    if direction == "DOWN" and score_sell >= 70:
+    # VENTE
+    if (
+        current["close"] < support
+        and pattern == "SELL"
+        and volume_ok
+    ):
 
         save_signal(
             0,
@@ -112,6 +52,6 @@ def analyse(df):
             current["close"]
         )
 
-        return "🔴 VENTE", score_sell
+        return "🔴 VENTE", 85
 
-    return "⏸ ATTENTE", max(score_buy, score_sell)
+    return "⏸ ATTENTE", 50
