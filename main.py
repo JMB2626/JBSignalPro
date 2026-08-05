@@ -25,7 +25,8 @@ def envoyer_signaux():
         try:
             resultats = []
 
-            df = get_data()
+            df_h4 = get_h4()
+            df_m1 = get_m1()
             signal, confiance = analyse(df)
             print(signal, confiance)
             print(f"Signal : {signal} | Confiance : {confiance}%")
