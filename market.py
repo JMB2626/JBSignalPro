@@ -1,13 +1,22 @@
 from twelvedata import TDClient
 import os
 
-def get_data():
-    td = TDClient(apikey=os.getenv("TWELVEDATA_API_KEY"))
+td = TDClient(apikey=os.getenv("TWELVEDATA_API_KEY"))
+
+def get_data(interval):
 
     ts = td.time_series(
         symbol="XAU/USD",
-        interval="5min",
-        outputsize=30
+        interval=interval,
+        outputsize=100
     )
 
     return ts.as_pandas()
+
+
+def get_h4():
+    return get_data("4h")
+
+
+def get_m1():
+    return get_data("1min")
