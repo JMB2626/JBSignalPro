@@ -2,6 +2,7 @@ from trend import trend
 from support_resistance import levels
 from engulfing import engulfing
 from history import save_signal
+from rejection import rejection
 
 def analyse(df_h4, df_m1):
 
@@ -17,6 +18,7 @@ def analyse(df_h4, df_m1):
         volume_ok = current["volume"] > df_m1["volume"].tail(10).mean()
 
     pattern = engulfing(df_m1)
+    reject = rejection(df_m1)
 
     tolerance = 3.0
 
@@ -25,7 +27,7 @@ def analyse(df_h4, df_m1):
 
         proche_support = abs(current["low"] - support) <= tolerance
 
-        if proche_support and pattern == "BUY" and volume_ok:
+        if proche_support and pattern == "BUY" and reject == "BUY" and volume_ok:
 
             save_signal(
                 0,
@@ -43,7 +45,7 @@ def analyse(df_h4, df_m1):
 
         proche_resistance = abs(resistance - current["high"]) <= tolerance
 
-        if proche_resistance and pattern == "SELL" and volume_ok:
+        if proche_resistance and pattern == "SELL" and reject == "SELL" and volume_ok:
 
             save_signal(
                 0,
