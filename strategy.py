@@ -1,4 +1,4 @@
-
+from bos import bos
 from trend import trend
 from support_resistance import levels
 from rejection import rejection
@@ -17,6 +17,8 @@ def analyse(df_h4, df_m1):
 
     confirm = confirmation(df_m1)
 
+    structure = bos(df_m1, resistance, support)
+
     volume_ok = True
 
     if "volume" in df_m1.columns:
@@ -29,7 +31,13 @@ def analyse(df_h4, df_m1):
 
         proche_support = abs(current["low"] - support) <= tolerance
 
-        if proche_support and reject == "BUY" and confirm == "BUY" and volume_ok:
+        if (
+           proche_support
+           and structure == "BUY"
+           and reject == "BUY"
+           and confirm == "BUY"
+           and volume_ok
+):
 
             save_signal(0,0,0,0,"BUY",current["close"])
 
@@ -40,7 +48,13 @@ def analyse(df_h4, df_m1):
 
         proche_resistance = abs(current["high"] - resistance) <= tolerance
 
-        if proche_resistance and reject == "SELL" and confirm == "SELL" and volume_ok:
+        if (
+           proche_resistance
+           and structure == "SELL"
+           and reject == "SELL"
+           and confirm == "SELL"
+           and volume_ok
+):
 
             save_signal(0,0,0,0,"SELL",current["close"])
 
