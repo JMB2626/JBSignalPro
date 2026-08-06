@@ -1,8 +1,9 @@
+
 from trend import trend
 from support_resistance import levels
-from engulfing import engulfing
-from history import save_signal
 from rejection import rejection
+from confirmation import confirmation
+from history import save_signal
 
 def analyse(df_h4, df_m1):
 
@@ -12,13 +13,14 @@ def analyse(df_h4, df_m1):
 
     current = df_m1.iloc[-1]
 
+    reject = rejection(df_m1)
+
+    confirm = confirmation(df_m1)
+
     volume_ok = True
 
     if "volume" in df_m1.columns:
         volume_ok = current["volume"] > df_m1["volume"].tail(10).mean()
-
-    pattern = engulfing(df_m1)
-    reject = rejection(df_m1)
 
     tolerance = 3.0
 
@@ -27,44 +29,21 @@ def analyse(df_h4, df_m1):
 
         proche_support = abs(current["low"] - support) <= tolerance
 
-        if proche_support and pattern == "BUY" and reject == "BUY" and volume_ok:
+        if proche_support and reject == "BUY" and confirm == "BUY" and volume_ok:
 
-            save_signal(
-                0,
-                0,
-                0,
-                0,
-                "BUY",
-                current["close"]
-            )
+            save_signal(0,0,0,0,"BUY",current["close"])
 
-            return "🟢 ACHAT", 90
+            return "🟢 ACHAT",95
 
     # VENTE
     if direction == "SELL":
 
-        proche_resistance = abs(resistance - current["high"]) <= tolerance
+        proche_resistance = abs(current["high"] - resistance) <= tolerance
 
-        if proche_resistance and pattern == "SELL" and reject == "SELL" and volume_ok:
+        if proche_resistance and reject == "SELL" and confirm == "SELL" and volume_ok:
 
-            save_signal(
-                0,
-                0,
-                0,
-                0,
-                "SELL",
-                current["close"]
-            )
+            save_signal(0,0,0,0,"SELL",current["close"])
 
-            return "🔴 VENTE", 90
-            print("===== DIAGNOSTIC =====")
-            print("Direction H4 :", direction)
-            print("Support H4 :", support)
-            print("Résistance H4 :", resistance)
-            print("Prix M1 :", current["close"])
-            print("Pattern :", pattern)
-            print("Rejet :", reject)
-            print("Volume OK :", volume_ok)
-            print("======================")
+            return "🔴 VENTE",95
 
-    return "⏸ ATTENTE", 50
+    return "⏸ ATTENTE",50
