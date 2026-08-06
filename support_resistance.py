@@ -1,6 +1,9 @@
 def levels(df):
 
-    resistance = df["high"].tail(50).max()
-    support = df["low"].tail(50).min()
+    highs = df["high"].tail(100)
+    lows = df["low"].tail(100)
+
+    resistance = highs.mode().iloc[0] if not highs.mode().empty else highs.max()
+    support = lows.mode().iloc[0] if not lows.mode().empty else lows.min()
 
     return support, resistance
