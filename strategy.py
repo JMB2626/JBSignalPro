@@ -57,5 +57,14 @@ def analyse(df_h4, df_m1):
             )
 
             return "🔴 VENTE", 90
+            print("===== DIAGNOSTIC =====")
+            print("Direction H4 :", direction)
+            print("Support H4 :", support)
+            print("Résistance H4 :", resistance)
+            print("Prix M1 :", current["close"])
+            print("Pattern :", pattern)
+            print("Rejet :", reject)
+            print("Volume OK :", volume_ok)
+            print("======================")
 
     return "⏸ ATTENTE", 50
