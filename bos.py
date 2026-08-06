@@ -1,11 +1,11 @@
-def bos(df, swing_high, swing_low):
+def bos(df, resistance, support):
 
     current = df.iloc[-1]
 
-    if current["close"] > swing_high:
+    if current["close"] > resistance:
         return "BUY"
 
-    if current["close"] < swing_low:
+    if current["close"] < support:
         return "SELL"
 
     return "NONE"
