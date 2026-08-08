@@ -19,7 +19,7 @@ def envoyer_signaux():
     print("=== Début analyse ===")
     check_results()
 
-    actifs = ["XAU/USD"]
+     actifs = ["R_75"]
 
     for actif in actifs:
         try:
