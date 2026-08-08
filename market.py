@@ -2,7 +2,9 @@ import websocket
 import json
 import pandas as pd
 
-DERIV_WS = "wss://ws.binaryws.com/websockets/v3"
+DERIV_APP_ID = os.getenv("DERIV_APP_ID")
+
+DERIV_WS = f"wss://ws.binaryws.com/websockets/v3?app_id={DERIV_APP_ID}"
 SYMBOL = "R_75"
 
 
