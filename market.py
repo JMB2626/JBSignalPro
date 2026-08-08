@@ -2,10 +2,7 @@ import websocket
 import json
 import pandas as pd
 
-
 DERIV_WS = "wss://ws.binaryws.com/websockets/v3"
-
-# Symbole Volatility 75 Index
 SYMBOL = "R_75"
 
 
@@ -37,14 +34,9 @@ def get_data(granularity):
 
     df = pd.DataFrame(candles)
 
-    df = df.rename(columns={
-        "open": "open",
-        "high": "high",
-        "low": "low",
-        "close": "close"
-    })
+    for col in ["open", "high", "low", "close"]:
+        df[col] = pd.to_numeric(df[col])
 
-    # Deriv ne fournit pas forcément un volume exploitable
     df["volume"] = 0
 
     return df
