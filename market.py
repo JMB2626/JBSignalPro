@@ -1,22 +1,58 @@
-from twelvedata import TDClient
-import os
+import websocket
+import json
+import pandas as pd
 
-td = TDClient(apikey=os.getenv("TWELVEDATA_API_KEY"))
 
-def get_data(interval):
+DERIV_WS = "wss://ws.binaryws.com/websockets/v3"
 
-    ts = td.time_series(
-        symbol="XAU/USD",
-        interval=interval,
-        outputsize=100
-    )
+# Symbole Volatility 75 Index
+SYMBOL = "R_75"
 
-    return ts.as_pandas()
+
+def get_data(granularity):
+
+    ws = websocket.create_connection(DERIV_WS)
+
+    request = {
+        "ticks_history": SYMBOL,
+        "count": 100,
+        "end": "latest",
+        "style": "candles",
+        "granularity": granularity
+    }
+
+    ws.send(json.dumps(request))
+
+    response = json.loads(ws.recv())
+
+    ws.close()
+
+    if "error" in response:
+        raise Exception(response["error"])
+
+    candles = response.get("candles", [])
+
+    if not candles:
+        raise Exception("Aucune donnée reçue de Deriv")
+
+    df = pd.DataFrame(candles)
+
+    df = df.rename(columns={
+        "open": "open",
+        "high": "high",
+        "low": "low",
+        "close": "close"
+    })
+
+    # Deriv ne fournit pas forcément un volume exploitable
+    df["volume"] = 0
+
+    return df
 
 
 def get_h4():
-    return get_data("4h")
+    return get_data(14400)
 
 
 def get_m1():
-    return get_data("1min")
+    return get_data(60)
